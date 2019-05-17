@@ -2143,6 +2143,12 @@ static inline void _sde_plane_set_scaler_v2(struct sde_phy_plane *pp,
 		return;
 	}
 
+	/* detach/ignore user data if 'disabled' */
+	if (!scale_v2.enable) {
+		SDE_DEBUG_PLANE(psde, "scale data removed\n");
+		return;
+	}
+
 	/* populate from user space */
 	pe = &(pp->pixel_ext);
 	memset(pe, 0, sizeof(struct sde_hw_pixel_ext));
@@ -2724,6 +2730,24 @@ static int _sde_init_phy_plane(struct sde_kms *sde_kms,
 
 end:
 	return rc;
+}
+
+void sde_plane_update_blob_property(struct drm_plane *plane,
+				const char *key,
+				int32_t value)
+{
+	char *kms_info_str = NULL;
+	struct sde_plane *sde_plane = to_sde_plane(plane);
+	size_t len;
+
+	kms_info_str = (char *)msm_property_get_blob(&sde_plane->property_info,
+				&sde_plane->blob_info, &len, 0);
+	if (!kms_info_str) {
+		SDE_ERROR("get plane property_info failed\n");
+		return;
+	}
+
+	sde_kms_info_update_keystr(kms_info_str, key, value);
 }
 
 /* initialize plane */

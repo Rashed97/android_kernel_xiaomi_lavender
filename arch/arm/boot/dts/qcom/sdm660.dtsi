@@ -405,8 +405,13 @@
 		};
 
 		cont_splash_mem: splash_region@9d400000 {
-			reg = <0x0 0x9d400000 0x0 0x02400000>;
+			reg = <0x0 0x9d400000 0x0 0x23ff000>;
 			label = "cont_splash_mem";
+		};
+
+		dfps_data_mem: dfps_data_mem@0x9f7ff000 {
+		       reg = <0 0x9f7ff000 0 0x00001000>;
+		       label = "dfps_data_mem";
 		};
 
 		pstore_reserve_mem: pstore_reserve_mem_region@0 {
@@ -2421,6 +2426,10 @@
 		"HS_RA_G1_L1", "HS_RA_G2_L1", "HS_RA_G3_L1",
 		"HS_RB_G1_L1", "HS_RB_G2_L1", "HS_RB_G3_L1",
 		"MAX";
+
+		pinctrl-names = "dev-reset-assert", "dev-reset-deassert";
+		pinctrl-0 = <&ufs_dev_reset_assert>;
+		pinctrl-1 = <&ufs_dev_reset_deassert>;
 
 		resets = <&clock_gcc GCC_UFS_BCR>;
 		reset-names = "core_reset";
